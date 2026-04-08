@@ -1,28 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Role } from "@/lib/auth";
+import { User, users } from "@/lib/auth";
 import { ArrowLeft, ShieldUser, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-type User = {
-    id: number;
-    name: string;
-    role: Role;
-};
-
-const users: User[] = [
-    { id: 1, name: "John Doe", role: "USER" },
-    { id: 2, name: "Jane Doe", role: "USER" },
-    { id: 3, name: "Admin", role: "ADMIN" },
-];
 
 export default function LoginPage() {
     const router = useRouter();
 
     const handleSelectUser = (user: User) => {
-        const cookieValue = encodeURIComponent(
+        const userData = encodeURIComponent(
             JSON.stringify({
                 id: user.id,
                 name: user.name,
@@ -30,7 +18,9 @@ export default function LoginPage() {
             }),
         );
         const maxAge = 60 * 60 * 24 * 7;
-        document.cookie = `user=${cookieValue}; path=/; max-age=${maxAge}; SameSite=Lax`;
+        document.cookie = `user=${userData}; path=/; max-age=${maxAge}; SameSite=Lax`;
+
+        localStorage.setItem("user", userData);
 
         const targetPath = user.role === "ADMIN" ? "/admin/home" : "/booking";
         router.push(targetPath);
