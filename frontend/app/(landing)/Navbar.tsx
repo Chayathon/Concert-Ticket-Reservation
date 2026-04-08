@@ -34,7 +34,7 @@ export default function Navbar() {
                         asChild
                         className="rounded-full bg-zinc-900 px-5 text-white hover:bg-zinc-700"
                     >
-                        <Link href="/booking">Book now</Link>
+                        <Link href="/login">Book now</Link>
                     </Button>
                 </div>
             </div>

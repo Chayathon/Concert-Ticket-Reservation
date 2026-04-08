@@ -48,7 +48,7 @@ export default function Hero() {
                 </p>
 
                 <div className="mt-8 flex flex-wrap items-center gap-3">
-                    <Link href="/booking">
+                    <Link href="/login">
                         <Button className="h-11 rounded-full bg-zinc-900 px-6 text-white hover:bg-zinc-700 cursor-pointer">
                             Start booking
                             <ArrowRight className="size-4" />
