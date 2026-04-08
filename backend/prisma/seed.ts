@@ -1,4 +1,8 @@
-import { PrismaClient, ReservationStatus } from './../generated/prisma/client';
+import {
+  PrismaClient,
+  Role,
+  ReservationStatus,
+} from './../generated/prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 
@@ -10,8 +14,30 @@ async function main() {
   console.log('Seeding database...');
 
   // ล้างข้อมูลเก่าทิ้ง
+  await prisma.user.deleteMany();
   await prisma.reservation.deleteMany();
   await prisma.concert.deleteMany();
+
+  const user1 = await prisma.user.create({
+    data: {
+      name: 'John Doe',
+      role: Role.USER,
+    },
+  });
+
+  const user2 = await prisma.user.create({
+    data: {
+      name: 'Jane Doe',
+      role: Role.USER,
+    },
+  });
+
+  const admin = await prisma.user.create({
+    data: {
+      name: 'Admin',
+      role: Role.ADMIN,
+    },
+  });
 
   // สร้าง Concerts
   const concert1 = await prisma.concert.create({
@@ -44,6 +70,7 @@ async function main() {
   // จำลองประวัติการจอง
   await prisma.reservation.create({
     data: {
+      userId: user1.id,
       concertId: concert1.id,
       status: ReservationStatus.RESERVED,
     },
@@ -51,6 +78,7 @@ async function main() {
 
   await prisma.reservation.create({
     data: {
+      userId: user2.id,
       concertId: concert3.id,
       status: ReservationStatus.RESERVED,
     },
@@ -59,6 +87,7 @@ async function main() {
   // ลองจำลองการกดยกเลิก
   await prisma.reservation.create({
     data: {
+      userId: user1.id,
       concertId: concert2.id,
       status: ReservationStatus.CANCELLED,
     },
