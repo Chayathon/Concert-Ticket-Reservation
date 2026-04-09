@@ -1,34 +1,61 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  ParseIntPipe,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { type AccessTokenPayload } from '../auth/auth.constants';
+import { AuthGuard } from '../auth/guards/auth.guard';
 import { ReservationService } from './reservation.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('reservation')
+@UseGuards(AuthGuard)
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
   @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationService.create(createReservationDto);
+  @UseGuards(RolesGuard)
+  @Roles('USER')
+  create(
+    @CurrentUser() currentUser: AccessTokenPayload,
+    @Body() createReservationDto: CreateReservationDto,
+  ) {
+    return this.reservationService.create(currentUser, createReservationDto);
   }
 
   @Get()
-  findAll() {
-    return this.reservationService.findAll();
+  @UseGuards(RolesGuard)
+  @Roles('USER', 'ADMIN')
+  findAll(@CurrentUser() currentUser: AccessTokenPayload) {
+    return this.reservationService.findAll(currentUser);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reservationService.findOne(+id);
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() currentUser: AccessTokenPayload,
+  ) {
+    return this.reservationService.findOne(id, currentUser);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReservationDto: UpdateReservationDto) {
-    return this.reservationService.update(+id, updateReservationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reservationService.remove(+id);
+  @Patch(':id/cancel')
+  @UseGuards(RolesGuard)
+  @Roles('USER')
+  cancel(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() currentUser: AccessTokenPayload,
+  ) {
+    return this.reservationService.cancel(id, currentUser);
   }
 }
