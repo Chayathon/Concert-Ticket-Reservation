@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-    AUTH_COOKIE_NAME,
+    ACCESS_TOKEN_COOKIE_NAME,
     ADMIN_HOME_PATH,
-    BOOKING_PATH,
+    RESERVE_PATH,
+    HISTORY_PATH,
     LOGIN_PATH,
+    type Role,
 } from "@/lib/auth";
+import { api } from "./lib/api";
 
 function redirectTo(request: NextRequest, pathname: string): NextResponse {
     const url = request.nextUrl.clone();
@@ -12,27 +15,43 @@ function redirectTo(request: NextRequest, pathname: string): NextResponse {
     return NextResponse.redirect(url);
 }
 
-function parseAuthUserFromCookie(request: NextRequest) {
-    const cookieValue = request.cookies.get(AUTH_COOKIE_NAME)?.value;
-    if (!cookieValue) {
+type CurrentUserResponse = { user: { id: number; role: Role } };
+
+async function verifyAccessToken(request: NextRequest) {
+    const token = request.cookies.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
+    if (!token) {
         return null;
     }
-    const parsed = decodeURIComponent(cookieValue);
 
-    return JSON.parse(parsed);
+    try {
+        const response = await api.get("/auth/me", {
+            headers: {
+                Cookie: `${ACCESS_TOKEN_COOKIE_NAME}=${encodeURIComponent(
+                    token,
+                )}`,
+            },
+        });
+
+        const data = response.data as CurrentUserResponse;
+        return { userId: data.user.id, role: data.user.role };
+    } catch (error) {
+        console.error("Failed to verify access token:", error);
+        return null;
+    }
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     const isLoginPath = pathname === LOGIN_PATH;
-    const isBookingPath = pathname === BOOKING_PATH;
-    const isAdminPath = pathname === "/admin" || pathname.startsWith("/admin/");
+    const isReservePath = pathname === RESERVE_PATH;
+    const isHistoryPath = pathname === HISTORY_PATH;
+    const isAdminPath = pathname === ADMIN_HOME_PATH;
 
-    const authUser = parseAuthUserFromCookie(request);
+    const authUser = await verifyAccessToken(request);
 
     if (!authUser) {
-        if (isBookingPath || isAdminPath) {
+        if (isReservePath || isHistoryPath || isAdminPath) {
             return redirectTo(request, LOGIN_PATH);
         }
 
@@ -42,16 +61,16 @@ export function middleware(request: NextRequest) {
     if (isLoginPath) {
         return redirectTo(
             request,
-            authUser.role === "ADMIN" ? ADMIN_HOME_PATH : BOOKING_PATH,
+            authUser.role === "ADMIN" ? ADMIN_HOME_PATH : RESERVE_PATH,
         );
     }
 
     if (authUser.role === "USER" && isAdminPath) {
-        return redirectTo(request, BOOKING_PATH);
+        return redirectTo(request, RESERVE_PATH);
     }
 
     if (authUser.role === "ADMIN") {
-        if (isBookingPath) {
+        if (isReservePath) {
             return redirectTo(request, ADMIN_HOME_PATH);
         }
 
@@ -64,11 +83,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: [
-        "/login",
-        "/booking",
-        "/booking/:path*",
-        "/admin",
-        "/admin/:path*",
-    ],
+    matcher: ["/login", "/reserve", "/history", "/home"],
 };
