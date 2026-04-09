@@ -36,6 +36,8 @@ model Reservation {
   userId    Int
   concert   Concert           @relation(fields: [concertId], references: [id])
   user      User              @relation(fields: [userId], references: [id])
+
+  @@unique([userId, concertId])
 }
 
 enum Role {
