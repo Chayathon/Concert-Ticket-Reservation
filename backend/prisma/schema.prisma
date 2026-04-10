@@ -17,27 +17,36 @@ model User {
 }
 
 model Concert {
-  id             Int           @id @default(autoincrement())
-  name           String
-  description    String
-  totalSeats     Int
-  availableSeats Int
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  reservations   Reservation[]
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String
+  totalSeats   Int
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  reserved     Int           @default(0)
+  reservations Reservation[]
 }
 
 model Reservation {
-  id        Int               @id @default(autoincrement())
-  status    ReservationStatus @default(RESERVED)
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  id        Int                @id @default(autoincrement())
+  status    ReservationStatus  @default(RESERVED)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
   concertId Int
   userId    Int
-  concert   Concert           @relation(fields: [concertId], references: [id])
-  user      User              @relation(fields: [userId], references: [id])
+  concert   Concert            @relation(fields: [concertId], references: [id], onDelete: Cascade)
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  events    ReservationEvent[]
 
   @@unique([userId, concertId])
+}
+
+model ReservationEvent {
+  id            Int               @id @default(autoincrement())
+  event         ReservationStatus
+  createdAt     DateTime          @default(now())
+  reservationId Int
+  reservation   Reservation       @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 }
 
 enum Role {
