@@ -15,6 +15,7 @@ async function main() {
 
   // ล้างข้อมูลเก่าทิ้ง
   await prisma.user.deleteMany();
+  await prisma.reservationEvent.deleteMany();
   await prisma.reservation.deleteMany();
   await prisma.concert.deleteMany();
 
@@ -32,7 +33,7 @@ async function main() {
     },
   });
 
-  const admin = await prisma.user.create({
+  await prisma.user.create({
     data: {
       name: 'Admin',
       role: Role.ADMIN,
@@ -45,7 +46,7 @@ async function main() {
       name: 'Rock Fest 2026',
       description: 'The biggest rock festival of the year!',
       totalSeats: 100,
-      availableSeats: 100,
+      reserved: 1,
     },
   });
 
@@ -54,7 +55,7 @@ async function main() {
       name: 'Jazz Night Live',
       description: 'A relaxing evening with smooth jazz.',
       totalSeats: 50,
-      availableSeats: 50,
+      reserved: 0,
     },
   });
 
@@ -62,13 +63,13 @@ async function main() {
     data: {
       name: 'Pop Idol Tour 2026',
       description: 'The most anticipated pop concert.',
-      totalSeats: 2,
-      availableSeats: 0,
+      totalSeats: 1,
+      reserved: 1,
     },
   });
 
   // จำลองประวัติการจอง
-  await prisma.reservation.create({
+  const reservation1 = await prisma.reservation.create({
     data: {
       userId: user1.id,
       concertId: concert1.id,
@@ -76,7 +77,7 @@ async function main() {
     },
   });
 
-  await prisma.reservation.create({
+  const reservation2 = await prisma.reservation.create({
     data: {
       userId: user2.id,
       concertId: concert3.id,
@@ -84,12 +85,17 @@ async function main() {
     },
   });
 
-  // ลองจำลองการกดยกเลิก
-  await prisma.reservation.create({
+  await prisma.reservationEvent.create({
     data: {
-      userId: user1.id,
-      concertId: concert2.id,
-      status: ReservationStatus.CANCELLED,
+      reservationId: reservation1.id,
+      event: ReservationStatus.RESERVED,
+    },
+  });
+
+  await prisma.reservationEvent.create({
+    data: {
+      reservationId: reservation2.id,
+      event: ReservationStatus.RESERVED,
     },
   });
 
