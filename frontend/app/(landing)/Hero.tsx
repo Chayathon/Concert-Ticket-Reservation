@@ -33,7 +33,7 @@ export default function Hero() {
             className="mx-auto grid w-full max-w-6xl gap-12 px-6 pb-20 pt-16 md:grid-cols-2 md:items-center md:pt-24"
         >
             <div className="animate-in fade-in-0 slide-in-from-bottom-6 duration-700">
-                <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-3 py-1 text-xs font-medium text-violet-900">
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                     <Sparkles className="size-3.5" />
                     Fast booking for live concerts
                 </div>
@@ -42,22 +42,22 @@ export default function Hero() {
                     Find your next concert and reserve your seat in minutes.
                 </h1>
 
-                <p className="mt-6 max-w-xl text-base text-zinc-600 sm:text-lg">
+                <p className="mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
                     A calm and simple way to discover events, get your e-ticket
                     instantly. No long forms, no stress, just music.
                 </p>
 
                 <div className="mt-8 flex flex-wrap items-center gap-3">
                     <Link href="/login">
-                        <Button className="h-11 rounded-full bg-zinc-900 px-6 text-white hover:bg-zinc-700 cursor-pointer">
-                            Start booking
+                        <Button className="h-11 rounded-full bg-primary px-6 text-primary-foreground hover:bg-primary/90 cursor-pointer">
+                            Start reserve
                             <ArrowRight className="size-4" />
                         </Button>
                     </Link>
                     <Button
                         variant="outline"
                         asChild
-                        className="h-11 rounded-full border-zinc-300 bg-white px-6"
+                        className="h-11 rounded-full border-border bg-background px-6"
                     >
                         <a href="#features">See features</a>
                     </Button>
@@ -67,12 +67,12 @@ export default function Hero() {
                     {stats.map((item) => (
                         <div
                             key={item.label}
-                            className="rounded-2xl border border-zinc-300 px-4 py-3"
+                            className="rounded-2xl border border-border px-4 py-3"
                         >
-                            <p className="text-lg font-semibold text-zinc-900">
+                            <p className="text-lg font-semibold text-foreground">
                                 {item.value}
                             </p>
-                            <p className="text-xs text-zinc-500">
+                            <p className="text-xs text-muted-foreground">
                                 {item.label}
                             </p>
                         </div>
@@ -81,10 +81,10 @@ export default function Hero() {
             </div>
 
             <div className="animate-in fade-in-0 slide-in-from-bottom-6 duration-1000">
-                <div className="rounded-3xl border border-zinc-300 p-5 shadow-xl">
+                <div className="rounded-3xl border border-border bg-card p-5 shadow-xl">
                     <div className="flex items-center justify-between">
                         <h2 className="text-sm font-medium">Upcoming shows</h2>
-                        <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs text-emerald-700">
+                        <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs text-primary">
                             Live
                         </span>
                     </div>
@@ -93,12 +93,12 @@ export default function Hero() {
                         {upcomingShows.map((show) => (
                             <div
                                 key={show.title}
-                                className="rounded-2xl border border-zinc-900/10 bg-white p-4"
+                                className="rounded-2xl border border-border bg-background p-4"
                             >
-                                <p className="font-medium text-zinc-900">
+                                <p className="font-medium text-foreground">
                                     {show.title}
                                 </p>
-                                <div className="mt-2 flex items-center gap-3 text-xs text-zinc-500">
+                                <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
                                     <span className="inline-flex items-center gap-1">
                                         <MapPin className="size-3.5" />
                                         {show.venue}

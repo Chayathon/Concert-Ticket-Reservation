@@ -8,7 +8,7 @@ const navItems = [
 
 export default function Navbar() {
     return (
-        <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white/70 backdrop-blur-xl">
+        <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-xl">
             <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
                 <Link
                     href="#hero"
@@ -22,7 +22,7 @@ export default function Navbar() {
                         <a
                             key={item.label}
                             href={item.href}
-                            className="text-sm text-zinc-600 transition-colors hover:text-black"
+                            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                         >
                             {item.label}
                         </a>
@@ -32,9 +32,9 @@ export default function Navbar() {
                 <div className="flex items-center">
                     <Button
                         asChild
-                        className="rounded-full bg-zinc-900 px-5 text-white hover:bg-zinc-700"
+                        className="rounded-full bg-primary px-5 text-primary-foreground hover:bg-primary/90"
                     >
-                        <Link href="/login">Book now</Link>
+                        <Link href="/login">Reserve now</Link>
                     </Button>
                 </div>
             </div>

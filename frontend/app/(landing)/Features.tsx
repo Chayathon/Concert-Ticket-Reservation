@@ -34,7 +34,7 @@ export default function Features() {
             className="mx-auto w-full max-w-6xl px-6 py-20 md:py-24"
         >
             <div className="mx-auto max-w-2xl text-center">
-                <p className="text-sm font-medium uppercase text-zinc-500">
+                <p className="text-sm font-medium uppercase text-muted-foreground">
                     Features
                 </p>
                 <h2 className="mt-3 text-3xl font-semibold sm:text-4xl">
@@ -49,15 +49,15 @@ export default function Features() {
                     return (
                         <article
                             key={item.title}
-                            className="rounded-3xl border border-zinc-300 p-6 shadow-xl transition-transform duration-200 hover:-translate-y-1"
+                            className="rounded-3xl border border-border bg-card p-6 shadow-xl transition-transform duration-200 hover:-translate-y-1"
                         >
-                            <div className="inline-flex rounded-2xl bg-zinc-900 p-2.5 text-white">
+                            <div className="inline-flex rounded-2xl bg-primary p-2.5 text-primary-foreground">
                                 <Icon className="size-5" />
                             </div>
-                            <h3 className="mt-5 text-xl font-semibold text-zinc-900">
+                            <h3 className="mt-5 text-xl font-semibold text-foreground">
                                 {item.title}
                             </h3>
-                            <p className="mt-3 leading-7 text-zinc-600">
+                            <p className="mt-3 leading-7 text-muted-foreground">
                                 {item.description}
                             </p>
                         </article>
