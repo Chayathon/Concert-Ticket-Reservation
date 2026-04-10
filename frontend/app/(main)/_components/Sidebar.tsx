@@ -137,7 +137,9 @@ export function AppSidebar() {
             className="min-h-svh border-r border-sidebar-border bg-sidebar"
         >
             <SidebarHeader className="px-4 pt-4 pb-2">
-                <p className="truncate text-2xl font-bold">Concertly</p>
+                <p className="truncate text-2xl text-primary font-bold">
+                    Concertly
+                </p>
             </SidebarHeader>
 
             <SidebarContent className="px-2 pb-3">
