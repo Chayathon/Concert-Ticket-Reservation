@@ -27,7 +27,7 @@ type Concert = {
     name: string;
     description: string;
     totalSeats: number;
-    availableSeats: number;
+    reserved: number;
 };
 
 type ConcertCardProps = {
@@ -38,7 +38,10 @@ type ConcertCardProps = {
     isProcessing: boolean;
     buttonLabel: string;
     onReserve: (concertId: number) => void | Promise<void>;
-    onCancel: (concertId: number, reservationId: number) => void | Promise<void>;
+    onCancel: (
+        concertId: number,
+        reservationId: number,
+    ) => void | Promise<void>;
 };
 
 export default function ConcertCard({
@@ -63,14 +66,12 @@ export default function ConcertCard({
             <CardFooter className="flex justify-between">
                 <p className="flex items-center gap-2">
                     <User className="size-4" />
-                    {concert.availableSeats} / {concert.totalSeats}
+                    {concert.reserved} / {concert.totalSeats}
                 </p>
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
                         <Button
-                            variant={
-                                isReserved ? "destructive" : "default"
-                            }
+                            variant={isReserved ? "destructive" : "default"}
                             disabled={isSoldOut || isProcessing}
                         >
                             {isSoldOut ? (
@@ -93,8 +94,8 @@ export default function ConcertCard({
                             <AlertDialogDescription>
                                 {isReserved ? (
                                     <>
-                                        Are you sure to cancel your
-                                        reservation for
+                                        Are you sure to cancel your reservation
+                                        for
                                         <br />
                                         <span className="font-semibold">
                                             "{concert.name}"
@@ -116,9 +117,7 @@ export default function ConcertCard({
                                 Cancel
                             </AlertDialogCancel>
                             <AlertDialogAction
-                                variant={
-                                    isReserved ? "destructive" : "default"
-                                }
+                                variant={isReserved ? "destructive" : "default"}
                                 onClick={() => {
                                     if (isReserved) {
                                         onCancel(concert.id, reservationId!);

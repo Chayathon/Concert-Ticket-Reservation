@@ -12,7 +12,7 @@ export default function BookingPage() {
         name: string;
         description: string;
         totalSeats: number;
-        availableSeats: number;
+        reserved: number;
     };
 
     type Reservation = {
@@ -98,7 +98,7 @@ export default function BookingPage() {
 
                     const isReserved = Boolean(reservationId);
                     const isSoldOut =
-                        !isReserved && concert.availableSeats === 0;
+                        !isReserved && concert.reserved === concert.totalSeats;
                     const isProcessing = isReserving === concert.id;
 
                     const buttonLabel = isSoldOut
