@@ -51,7 +51,7 @@ export class ConcertController {
   @Delete(':id')
   @UseGuards(RolesGuard)
   @Roles('ADMIN')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.concertService.remove(id);
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.concertService.delete(id);
   }
 }

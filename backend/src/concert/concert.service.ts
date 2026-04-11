@@ -73,7 +73,12 @@ export class ConcertService {
     }
   }
 
-  async remove(id: number) {
+  async delete(id: number) {
+    const concert = await this.prisma.concert.findUnique({ where: { id } });
+    if (!concert) {
+      throw new NotFoundException(`Concert ${id} not found`);
+    }
+
     try {
       return await this.prisma.concert.delete({
         where: { id },
