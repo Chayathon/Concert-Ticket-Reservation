@@ -39,14 +39,18 @@ export class ReservationController {
     return this.reservationService.findAll(currentUser);
   }
 
-  @Get(':id')
+  @Get('events')
+  @UseGuards(RolesGuard)
+  @Roles('USER', 'ADMIN')
+  findEvents(@CurrentUser() currentUser: AccessTokenPayload) {
+    return this.reservationService.findEvents(currentUser);
+  }
+
+  @Get('summary')
   @UseGuards(RolesGuard)
   @Roles('ADMIN')
-  findOne(
-    @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() currentUser: AccessTokenPayload,
-  ) {
-    return this.reservationService.findOne(id, currentUser);
+  summary() {
+    return this.reservationService.summary();
   }
 
   @Patch(':id/cancel')
