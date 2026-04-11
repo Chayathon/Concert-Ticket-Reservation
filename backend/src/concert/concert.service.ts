@@ -18,7 +18,7 @@ export class ConcertService {
       return await this.prisma.concert.create({
         data: {
           ...createConcertDto,
-          availableSeats: createConcertDto.totalSeats,
+          reserved: 0,
         },
       });
     } catch (error: unknown) {
@@ -52,12 +52,20 @@ export class ConcertService {
       throw new NotFoundException(`Concert ${id} not found`);
     }
 
+    if (
+      typeof updateConcertDto.totalSeats === 'number' &&
+      updateConcertDto.totalSeats < concert.reserved
+    ) {
+      throw new BadRequestException(
+        'Total seats cannot be less than reserved seats',
+      );
+    }
+
     try {
       return await this.prisma.concert.update({
         where: { id },
         data: {
           ...updateConcertDto,
-          availableSeats: updateConcertDto.totalSeats,
         },
       });
     } catch (error: unknown) {
