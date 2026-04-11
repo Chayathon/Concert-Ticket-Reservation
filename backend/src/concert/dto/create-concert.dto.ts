@@ -10,6 +10,6 @@ export class CreateConcertDto {
   description!: string;
 
   @IsInt()
-  @Min(1)
+  @Min(0)
   totalSeats!: number;
 }
