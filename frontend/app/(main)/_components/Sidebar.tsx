@@ -33,6 +33,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    useSidebar,
 } from "@/components/ui/sidebar";
 import { toast } from "sonner";
 
@@ -71,6 +72,7 @@ const ADMIN_MENU: MenuItem[] = [
 export function AppSidebar() {
     const pathname = usePathname();
     const router = useRouter();
+    const { isMobile, setOpenMobile } = useSidebar();
     const [authUser, setAuthUser] = useState<AuthUser | null>(null);
     const [isSwitchingAccount, setIsSwitchingAccount] = useState(false);
 
@@ -86,6 +88,12 @@ export function AppSidebar() {
 
         void loadCurrentUser();
     }, []);
+
+    useEffect(() => {
+        if (isMobile) {
+            setOpenMobile(false);
+        }
+    }, [isMobile, pathname, setOpenMobile]);
 
     const menuItems = useMemo(() => {
         if (authUser?.role === "ADMIN") {
@@ -103,6 +111,7 @@ export function AppSidebar() {
         try {
             await logoutAuth();
         } finally {
+            setOpenMobile(false);
             toast.success("Logged out successfully");
             setAuthUser(null);
             router.replace("/login");
@@ -120,6 +129,7 @@ export function AppSidebar() {
         try {
             const { user } = await loginByUserId(nextUser.id);
             setAuthUser(user);
+            setOpenMobile(false);
             router.replace(
                 user.role === "ADMIN" ? ADMIN_HOME_PATH : RESERVE_PATH,
             );
@@ -133,8 +143,8 @@ export function AppSidebar() {
 
     return (
         <Sidebar
-            collapsible="none"
-            className="min-h-svh border-r border-sidebar-border bg-sidebar"
+            collapsible="offcanvas"
+            className="border-r border-sidebar-border bg-sidebar"
         >
             <SidebarHeader className="px-4 pt-4 pb-2">
                 <p className="truncate text-2xl text-primary font-bold">
@@ -161,7 +171,14 @@ export function AppSidebar() {
                                             isActive={isActive}
                                             className="h-10 rounded-lg px-3 text-sidebar-foreground hover:bg-sidebar-accent data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
                                         >
-                                            <Link href={item.href}>
+                                            <Link
+                                                href={item.href}
+                                                onClick={() => {
+                                                    if (isMobile) {
+                                                        setOpenMobile(false);
+                                                    }
+                                                }}
+                                            >
                                                 <item.icon className="size-4" />
                                                 <span>{item.label}</span>
                                             </Link>
