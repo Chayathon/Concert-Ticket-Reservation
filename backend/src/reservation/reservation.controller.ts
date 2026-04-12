@@ -14,8 +14,8 @@ import { type AccessTokenPayload } from '../auth/auth.constants';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { ReservationService } from './reservation.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('reservation')
 @UseGuards(AuthGuard)
