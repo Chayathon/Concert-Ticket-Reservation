@@ -174,6 +174,38 @@ docker compose down -v
     - Built from `frontend/Dockerfile`
     - Port mapping `3000:3000`
 
+## Database Setup and Seeding
+
+Use this section when you need to initialize database schema or insert sample data.
+
+### Local (run from `backend`)
+
+Apply existing migrations:
+
+```bash
+cd backend
+npx prisma migrate deploy
+```
+
+Insert seed data:
+
+```bash
+npx prisma db seed
+```
+
+Reset database and re-seed (development only):
+
+```bash
+npx prisma migrate reset --force
+```
+
+### Docker (run Prisma inside backend container)
+
+```bash
+docker compose exec backend npx prisma migrate deploy
+docker compose exec backend npx prisma db seed
+```
+
 ## Run Locally (Without Docker)
 
 ### 0) Prerequisites
